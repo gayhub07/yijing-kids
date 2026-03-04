@@ -1,0 +1,42 @@
+{
+  "name": "yijing-kids",
+  "version": "1.0.0",
+  "description": "儿童易经学习App - 3-12岁",
+  "type": "module",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "lint": "biome check .",
+    "format": "biome format . --write"
+  },
+  "keywords": [
+    "yijing",
+    "kids",
+    "education",
+    "svelte"
+  ],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.29.3",
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.4",
+    "@sveltejs/adapter-auto": "^7.0.1",
+    "@sveltejs/kit": "^2.53.1",
+    "@sveltejs/vite-plugin-svelte": "^6.2.4",
+    "@tailwindcss/postcss": "^4.2.1",
+    "@types/node": "^25.3.0",
+    "autoprefixer": "^10.4.24",
+    "postcss": "^8.5.6",
+    "svelte": "^5.53.3",
+    "svelte-check": "^4.4.3",
+    "tailwindcss": "^4.2.1",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.1"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.8.0",
+    "@supabase/supabase-js": "^2.97.0"
+  }
+}
