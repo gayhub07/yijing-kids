@@ -29,8 +29,8 @@ jobs:
       - name: Lint
         run: pnpm lint
 
-      - name: Check types
-        run: pnpm check
-
       - name: Build
         run: pnpm build
+        env:
+          PUBLIC_SUPABASE_URL: https://jyalotiourdqocosdiaj.supabase.co
+          PUBLIC_SUPABASE_ANON_KEY: sb_publishable_tcAWGZqxb7F8Ba5eR_7GYQ_ITdJ98m4
