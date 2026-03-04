@@ -8,6 +8,7 @@ import {
   getStoryProgress,
   updateProfile,
 } from '$lib/supabase/api'
+import { auth } from '$lib/supabase/auth'
 
 // 成就定义
 const achievementDefs = [

@@ -1,6 +1,8 @@
 <script lang="ts">
 import { onMount } from 'svelte'
 import { browser } from '$app/environment'
+import FeatureCard from '$lib/components/FeatureCard.svelte'
+import ProgressRing from '$lib/components/ProgressRing.svelte'
 import {
   checkIn,
   getBaguaProgress,
@@ -8,6 +10,7 @@ import {
   getProfile,
   getStoryProgress,
 } from '$lib/supabase/api'
+import { auth } from '$lib/supabase/auth'
 
 let profile = $state<any>(null)
 let baguaProgress = $state<any[]>([])

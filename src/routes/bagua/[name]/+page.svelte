@@ -1,7 +1,9 @@
 <script lang="ts">
 import { browser } from '$app/environment'
 import { goto } from '$app/navigation'
+import { page } from '$app/stores'
 import { getBaguaProgress, updateBaguaProgress } from '$lib/supabase/api'
+import { auth } from '$lib/supabase/auth'
 
 // 八卦完整数据
 const baguaData: Record<

@@ -3,6 +3,7 @@ import '../app.css'
 import { onMount } from 'svelte'
 import { browser } from '$app/environment'
 import { auth } from '$lib/supabase/auth'
+import BottomNav from '$lib/components/BottomNav.svelte'
 
 let { children } = $props()
 let mounted = $state(false)

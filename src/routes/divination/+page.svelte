@@ -2,6 +2,7 @@
 import { onMount } from 'svelte'
 import { browser } from '$app/environment'
 import { addDivinationRecord, getDivinationHistory } from '$lib/supabase/api'
+import { auth } from '$lib/supabase/auth'
 
 // 完整的占卜结果（八卦）
 const divinationResults = [

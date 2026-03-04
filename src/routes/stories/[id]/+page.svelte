@@ -1,8 +1,10 @@
 <script lang="ts">
 import { browser } from '$app/environment'
 import { goto } from '$app/navigation'
+import { page } from '$app/stores'
 import { extraStoriesData } from '$lib/data/stories-extra'
 import { getStoryProgress, updateStoryProgress } from '$lib/supabase/api'
+import { auth } from '$lib/supabase/auth'
 
 // 前16个故事数据
 const first16StoriesData: Record<

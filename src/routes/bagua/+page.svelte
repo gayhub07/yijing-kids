@@ -1,7 +1,9 @@
 <script lang="ts">
 import { onMount } from 'svelte'
 import { browser } from '$app/environment'
+import BaguaCard from '$lib/components/BaguaCard.svelte'
 import { getBaguaProgress } from '$lib/supabase/api'
+import { auth } from '$lib/supabase/auth'
 
 // 八卦基础数据
 const baguaBaseList = [

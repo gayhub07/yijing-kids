@@ -3,6 +3,7 @@ import { onMount } from 'svelte'
 import { browser } from '$app/environment'
 import { extraStoriesData } from '$lib/data/stories-extra'
 import { getStoryProgress } from '$lib/supabase/api'
+import { auth } from '$lib/supabase/auth'
 
 // 故事基础数据（前16个）
 const storiesBaseList = [
