@@ -26,5 +26,8 @@
       "quoteStyle": "single",
       "semicolons": "asNeeded"
     }
+  },
+  "assist": {
+    "enabled": false
   }
 }
