@@ -1,15 +1,15 @@
 <script lang="ts">
-  import { page } from '$app/state'
-  
-  const navItems = [
-    { path: '/', icon: 'home', label: '首页' },
-    { path: '/bagua', icon: 'bagua', label: '八卦' },
-    { path: '/stories', icon: 'book', label: '故事' },
-    { path: '/divination', icon: 'compass', label: '占卜' },
-    { path: '/profile', icon: 'user', label: '我的' },
-  ]
-  
-  const currentPath = $derived(page.url.pathname)
+import { page } from '$app/state'
+
+const navItems = [
+  { path: '/', icon: 'home', label: '首页' },
+  { path: '/bagua', icon: 'bagua', label: '八卦' },
+  { path: '/stories', icon: 'book', label: '故事' },
+  { path: '/divination', icon: 'compass', label: '占卜' },
+  { path: '/profile', icon: 'user', label: '我的' },
+]
+
+const currentPath = $derived(page.url.pathname)
 </script>
 
 <nav class="bottom-nav">

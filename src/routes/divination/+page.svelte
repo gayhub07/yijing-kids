@@ -1,117 +1,165 @@
 <script lang="ts">
-  import { onMount } from 'svelte'
-  import { browser } from '$app/environment'
-  import { auth } from '$lib/supabase/auth'
-  import { addDivinationRecord, getDivinationHistory } from '$lib/supabase/api'
-  
-  // 完整的占卜结果（八卦）
-  const divinationResults = [
-    { gua: '乾', symbol: '☰', meaning: '刚健进取', advice: '今天适合主动出击，勇敢尝试新事物！相信自己的能力！', fortune: '大吉' },
-    { gua: '坤', symbol: '☷', meaning: '厚德载物', advice: '今天要耐心等待，做好自己的事情。稳扎稳打才是王道！', fortune: '中吉' },
-    { gua: '震', symbol: '☳', meaning: '震动觉醒', advice: '可能会有意外的事情发生，保持警觉哦！变化中藏着机会！', fortune: '小吉' },
-    { gua: '巽', symbol: '☴', meaning: '随风入微', advice: '今天适合温和地表达自己的想法，用温柔打动别人！', fortune: '中吉' },
-    { gua: '坎', symbol: '☵', meaning: '流动变化', advice: '遇到困难不要怕，换个角度试试看。灵活应变是关键！', fortune: '小吉' },
-    { gua: '离', symbol: '☲', meaning: '光明灿烂', advice: '今天运气不错，适合展示自己的才华！勇敢地表现吧！', fortune: '大吉' },
-    { gua: '艮', symbol: '☶', meaning: '稳重如山', advice: '今天适合停下来思考，不要急于行动。稳住就是胜利！', fortune: '中吉' },
-    { gua: '兑', symbol: '☱', meaning: '喜悦交流', advice: '和朋友聊聊天，会有好心情！今天适合社交活动！', fortune: '大吉' },
-  ]
-  
-  let isShaking = $state(false)
-  let showResult = $state(false)
-  let result = $state<typeof divinationResults[0] | null>(null)
-  let isSaving = $state(false)
-  
-  let history = $state<any[]>([])
-  let loadingHistory = $state(true)
-  
-  // 加载占卜历史
-  async function loadHistory() {
-    if (!browser || !$auth.user) return
-    
-    loadingHistory = true
-    try {
-      const data = await getDivinationHistory($auth.user.id, 10)
-      history = data
-    } catch (error) {
-      console.error('Error loading history:', error)
-    }
-    loadingHistory = false
+import { onMount } from 'svelte'
+import { browser } from '$app/environment'
+import { addDivinationRecord, getDivinationHistory } from '$lib/supabase/api'
+
+// 完整的占卜结果（八卦）
+const divinationResults = [
+  {
+    gua: '乾',
+    symbol: '☰',
+    meaning: '刚健进取',
+    advice: '今天适合主动出击，勇敢尝试新事物！相信自己的能力！',
+    fortune: '大吉',
+  },
+  {
+    gua: '坤',
+    symbol: '☷',
+    meaning: '厚德载物',
+    advice: '今天要耐心等待，做好自己的事情。稳扎稳打才是王道！',
+    fortune: '中吉',
+  },
+  {
+    gua: '震',
+    symbol: '☳',
+    meaning: '震动觉醒',
+    advice: '可能会有意外的事情发生，保持警觉哦！变化中藏着机会！',
+    fortune: '小吉',
+  },
+  {
+    gua: '巽',
+    symbol: '☴',
+    meaning: '随风入微',
+    advice: '今天适合温和地表达自己的想法，用温柔打动别人！',
+    fortune: '中吉',
+  },
+  {
+    gua: '坎',
+    symbol: '☵',
+    meaning: '流动变化',
+    advice: '遇到困难不要怕，换个角度试试看。灵活应变是关键！',
+    fortune: '小吉',
+  },
+  {
+    gua: '离',
+    symbol: '☲',
+    meaning: '光明灿烂',
+    advice: '今天运气不错，适合展示自己的才华！勇敢地表现吧！',
+    fortune: '大吉',
+  },
+  {
+    gua: '艮',
+    symbol: '☶',
+    meaning: '稳重如山',
+    advice: '今天适合停下来思考，不要急于行动。稳住就是胜利！',
+    fortune: '中吉',
+  },
+  {
+    gua: '兑',
+    symbol: '☱',
+    meaning: '喜悦交流',
+    advice: '和朋友聊聊天，会有好心情！今天适合社交活动！',
+    fortune: '大吉',
+  },
+]
+
+let isShaking = $state(false)
+let showResult = $state(false)
+let result = $state<(typeof divinationResults)[0] | null>(null)
+let isSaving = $state(false)
+
+let history = $state<any[]>([])
+let loadingHistory = $state(true)
+
+// 加载占卜历史
+async function loadHistory() {
+  if (!browser || !$auth.user) return
+
+  loadingHistory = true
+  try {
+    const data = await getDivinationHistory($auth.user.id, 10)
+    history = data
+  } catch (error) {
+    console.error('Error loading history:', error)
   }
-  
-  // 开始占卜
-  async function startDivination() {
-    if (isShaking || !$auth.user) return
-    
-    isShaking = true
-    showResult = false
-    
-    // 模拟摇签动画
-    setTimeout(async () => {
-      isShaking = false
-      result = divinationResults[Math.floor(Math.random() * divinationResults.length)]
-      showResult = true
-      
-      // 保存到数据库
-      if (browser && $auth.user && result) {
-        isSaving = true
-        try {
-          await addDivinationRecord(
-            $auth.user.id, 
-            result.gua, 
-            `${result.meaning}|${result.advice}|${result.fortune}`
-          )
-          // 刷新历史
-          await loadHistory()
-        } catch (error) {
-          console.error('Error saving divination:', error)
-        }
-        isSaving = false
+  loadingHistory = false
+}
+
+// 开始占卜
+async function startDivination() {
+  if (isShaking || !$auth.user) return
+
+  isShaking = true
+  showResult = false
+
+  // 模拟摇签动画
+  setTimeout(async () => {
+    isShaking = false
+    result =
+      divinationResults[Math.floor(Math.random() * divinationResults.length)]
+    showResult = true
+
+    // 保存到数据库
+    if (browser && $auth.user && result) {
+      isSaving = true
+      try {
+        await addDivinationRecord(
+          $auth.user.id,
+          result.gua,
+          `${result.meaning}|${result.advice}|${result.fortune}`,
+        )
+        // 刷新历史
+        await loadHistory()
+      } catch (error) {
+        console.error('Error saving divination:', error)
       }
-    }, 2000)
-  }
-  
-  // 重置
-  function reset() {
-    showResult = false
-    result = null
-  }
-  
-  // 格式化日期
-  function formatDate(dateStr: string): string {
-    const date = new Date(dateStr)
-    const today = new Date()
-    const yesterday = new Date(today)
-    yesterday.setDate(yesterday.getDate() - 1)
-    
-    if (date.toDateString() === today.toDateString()) {
-      return '今天'
-    } else if (date.toDateString() === yesterday.toDateString()) {
-      return '昨天'
-    } else {
-      return `${date.getMonth() + 1}/${date.getDate()}`
+      isSaving = false
     }
+  }, 2000)
+}
+
+// 重置
+function reset() {
+  showResult = false
+  result = null
+}
+
+// 格式化日期
+function formatDate(dateStr: string): string {
+  const date = new Date(dateStr)
+  const today = new Date()
+  const yesterday = new Date(today)
+  yesterday.setDate(yesterday.getDate() - 1)
+
+  if (date.toDateString() === today.toDateString()) {
+    return '今天'
+  } else if (date.toDateString() === yesterday.toDateString()) {
+    return '昨天'
+  } else {
+    return `${date.getMonth() + 1}/${date.getDate()}`
   }
-  
-  // 解析结果
-  function parseResult(resultStr: string): { meaning: string, fortune: string } {
-    const parts = resultStr.split('|')
-    return {
-      meaning: parts[0] || '',
-      fortune: parts[2] || '中吉'
-    }
+}
+
+// 解析结果
+function parseResult(resultStr: string): { meaning: string; fortune: string } {
+  const parts = resultStr.split('|')
+  return {
+    meaning: parts[0] || '',
+    fortune: parts[2] || '中吉',
   }
-  
-  onMount(() => {
-    if (browser && $auth.user) {
-      loadHistory()
-    }
-  })
-  
-  $effect(() => {
-    if (browser && $auth.user && loadingHistory) {
-      loadHistory()
-    }
-  })
+}
+
+onMount(() => {
+  if (browser && $auth.user) {
+    loadHistory()
+  }
+})
+
+$effect(() => {
+  if (browser && $auth.user && loadingHistory) {
+    loadHistory()
+  }
+})
 </script>
 
 <svelte:head>

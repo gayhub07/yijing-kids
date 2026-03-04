@@ -1,60 +1,108 @@
 <script lang="ts">
-  import { onMount } from 'svelte'
-  import { browser } from '$app/environment'
-  import { auth } from '$lib/supabase/auth'
-  import { getBaguaProgress } from '$lib/supabase/api'
-  import BaguaCard from '$lib/components/BaguaCard.svelte'
-  
-  // 八卦基础数据
-  const baguaBaseList = [
-    { name: '乾', symbol: '☰', nature: '天', element: '金', meaning: '刚健、创造' },
-    { name: '坤', symbol: '☷', nature: '地', element: '土', meaning: '柔顺、承载' },
-    { name: '震', symbol: '☳', nature: '雷', element: '木', meaning: '震动、启动' },
-    { name: '巽', symbol: '☴', nature: '风', element: '木', meaning: '渗透、顺从' },
-    { name: '坎', symbol: '☵', nature: '水', element: '水', meaning: '险陷、流动' },
-    { name: '离', symbol: '☲', nature: '火', element: '火', meaning: '光明、依附' },
-    { name: '艮', symbol: '☶', nature: '山', element: '土', meaning: '静止、稳定' },
-    { name: '兑', symbol: '☱', nature: '泽', element: '金', meaning: '喜悦、沟通' },
-  ]
-  
-  let progressMap = $state<Record<string, boolean>>({})
-  let loading = $state(true)
-  
-  // 合并基础数据和进度
-  const baguaList = $derived(baguaBaseList.map(gua => ({
+import { onMount } from 'svelte'
+import { browser } from '$app/environment'
+import { getBaguaProgress } from '$lib/supabase/api'
+
+// 八卦基础数据
+const baguaBaseList = [
+  {
+    name: '乾',
+    symbol: '☰',
+    nature: '天',
+    element: '金',
+    meaning: '刚健、创造',
+  },
+  {
+    name: '坤',
+    symbol: '☷',
+    nature: '地',
+    element: '土',
+    meaning: '柔顺、承载',
+  },
+  {
+    name: '震',
+    symbol: '☳',
+    nature: '雷',
+    element: '木',
+    meaning: '震动、启动',
+  },
+  {
+    name: '巽',
+    symbol: '☴',
+    nature: '风',
+    element: '木',
+    meaning: '渗透、顺从',
+  },
+  {
+    name: '坎',
+    symbol: '☵',
+    nature: '水',
+    element: '水',
+    meaning: '险陷、流动',
+  },
+  {
+    name: '离',
+    symbol: '☲',
+    nature: '火',
+    element: '火',
+    meaning: '光明、依附',
+  },
+  {
+    name: '艮',
+    symbol: '☶',
+    nature: '山',
+    element: '土',
+    meaning: '静止、稳定',
+  },
+  {
+    name: '兑',
+    symbol: '☱',
+    nature: '泽',
+    element: '金',
+    meaning: '喜悦、沟通',
+  },
+]
+
+let progressMap = $state<Record<string, boolean>>({})
+let loading = $state(true)
+
+// 合并基础数据和进度
+const baguaList = $derived(
+  baguaBaseList.map((gua) => ({
     ...gua,
-    learned: progressMap[gua.name] || false
-  })))
-  
-  const learnedCount = $derived(baguaList.filter(b => b.learned).length)
-  
-  async function loadProgress() {
-    if (!browser || !$auth.user) return
-    
-    loading = true
-    try {
-      const progress = await getBaguaProgress($auth.user.id)
-      progressMap = {}
-      progress.forEach(p => {
-        progressMap[p.gua_name] = p.learned
-      })
-    } catch (error) {
-      console.error('Error loading progress:', error)
-    }
-    loading = false
+    learned: progressMap[gua.name] || false,
+  })),
+)
+
+const learnedCount = $derived(baguaList.filter((b) => b.learned).length)
+
+async function loadProgress() {
+  if (!browser || !$auth.user) return
+
+  loading = true
+  try {
+    const progress = await getBaguaProgress($auth.user.id)
+    progressMap = {}
+    progress.forEach((p) => {
+      progressMap[p.gua_name] = p.learned
+    })
+  } catch (error) {
+    console.error('Error loading progress:', error)
   }
-  
-  onMount(() => {
-    if (browser && $auth.user) {
-      loadProgress()
-    }
-  })
-  
-  $effect(() => {
-    if (browser && $auth.user && loading) {
-      loadProgress()
-    }
-  })
+  loading = false
+}
+
+onMount(() => {
+  if (browser && $auth.user) {
+    loadProgress()
+  }
+})
+
+$effect(() => {
+  if (browser && $auth.user && loading) {
+    loadProgress()
+  }
+})
 </script>
 
 <svelte:head>

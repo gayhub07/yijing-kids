@@ -1,17 +1,17 @@
 <script lang="ts">
-  interface Feature {
-    title: string
-    description: string
-    icon: string
-    color: string
-    href: string
-  }
+interface Feature {
+  title: string
+  description: string
+  icon: string
+  color: string
+  href: string
+}
 
-  interface Props {
-    feature: Feature
-  }
+interface Props {
+  feature: Feature
+}
 
-  let { feature }: Props = $props()
+let { feature }: Props = $props()
 </script>
 
 <a

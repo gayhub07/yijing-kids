@@ -1,31 +1,31 @@
 <script lang="ts">
-  interface Props {
-    gua: {
-      name: string
-      symbol: string
-      nature: string
-      element: string
-      meaning: string
-      learned: boolean
-    }
-    index: number
+interface Props {
+  gua: {
+    name: string
+    symbol: string
+    nature: string
+    element: string
+    meaning: string
+    learned: boolean
   }
+  index: number
+}
 
-  let { gua, index }: Props = $props()
+let { gua, index }: Props = $props()
 
-  // 八卦对应的渐变色
-  const gradients = [
-    'linear-gradient(135deg, #FB923C, #EF4444)',
-    'linear-gradient(135deg, #FBBF24, #F97316)',
-    'linear-gradient(135deg, #34D399, #14B8A6)',
-    'linear-gradient(135deg, #22D3EE, #3B82F6)',
-    'linear-gradient(135deg, #60A5FA, #6366F1)',
-    'linear-gradient(135deg, #A78BFA, #8B5CF6)',
-    'linear-gradient(135deg, #F472B6, #FB7185)',
-    'linear-gradient(135deg, #FB7185, #EF4444)',
-  ]
+// 八卦对应的渐变色
+const gradients = [
+  'linear-gradient(135deg, #FB923C, #EF4444)',
+  'linear-gradient(135deg, #FBBF24, #F97316)',
+  'linear-gradient(135deg, #34D399, #14B8A6)',
+  'linear-gradient(135deg, #22D3EE, #3B82F6)',
+  'linear-gradient(135deg, #60A5FA, #6366F1)',
+  'linear-gradient(135deg, #A78BFA, #8B5CF6)',
+  'linear-gradient(135deg, #F472B6, #FB7185)',
+  'linear-gradient(135deg, #FB7185, #EF4444)',
+]
 
-  const gradient = $derived(gradients[(index - 1) % 8])
+const gradient = $derived(gradients[(index - 1) % 8])
 </script>
 
 <a href="/bagua/{gua.name}" class="bagua-card" style="background: {gradient}">

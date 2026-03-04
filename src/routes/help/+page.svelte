@@ -1,42 +1,48 @@
 <script lang="ts">
-  import { goto } from '$app/navigation'
+import { goto } from '$app/navigation'
 
-  let expandedFaq = $state<number | null>(null)
+let expandedFaq = $state<number | null>(null)
 
-  const faqs = [
-    {
-      question: '什么是易经？',
-      answer: '易经是中国最古老的经典之一，通过八卦和六十四卦来解释天地万物的变化规律。它不仅是一本占卜书，更是一部哲学著作，教导我们如何顺应自然、把握时机。'
-    },
-    {
-      question: '什么是八卦？',
-      answer: '八卦是由阴爻（⚋）和阳爻（☰）组成的八个基本符号，分别代表天、地、雷、风、水、火、山、泽八种自然现象。每个卦象都有独特的含义和象征。'
-    },
-    {
-      question: '如何学习八卦？',
-      answer: '建议从认识八个基本卦象开始，了解每个卦象的名称、符号和含义。然后阅读每个卦象对应的故事，理解其中的道理。最后可以尝试占卜功能，体验易经的智慧。'
-    },
-    {
-      question: '占卜结果准确吗？',
-      answer: '占卜是一种有趣的体验，结果仅供参考。易经的真正价值在于帮助我们思考问题、启发智慧。不要过分依赖占卜结果，而是要从中获得启发和思考。'
-    },
-    {
-      question: '连续打卡有什么用？',
-      answer: '连续打卡可以记录你的学习习惯，帮助你养成每天学习的好习惯。坚持学习可以获得成就徽章，见证自己的成长！'
-    },
-    {
-      question: '如何修改头像和昵称？',
-      answer: '进入"我的"页面，点击"编辑"按钮，就可以修改你的昵称和选择喜欢的头像啦！'
-    }
-  ]
+const faqs = [
+  {
+    question: '什么是易经？',
+    answer:
+      '易经是中国最古老的经典之一，通过八卦和六十四卦来解释天地万物的变化规律。它不仅是一本占卜书，更是一部哲学著作，教导我们如何顺应自然、把握时机。',
+  },
+  {
+    question: '什么是八卦？',
+    answer:
+      '八卦是由阴爻（⚋）和阳爻（☰）组成的八个基本符号，分别代表天、地、雷、风、水、火、山、泽八种自然现象。每个卦象都有独特的含义和象征。',
+  },
+  {
+    question: '如何学习八卦？',
+    answer:
+      '建议从认识八个基本卦象开始，了解每个卦象的名称、符号和含义。然后阅读每个卦象对应的故事，理解其中的道理。最后可以尝试占卜功能，体验易经的智慧。',
+  },
+  {
+    question: '占卜结果准确吗？',
+    answer:
+      '占卜是一种有趣的体验，结果仅供参考。易经的真正价值在于帮助我们思考问题、启发智慧。不要过分依赖占卜结果，而是要从中获得启发和思考。',
+  },
+  {
+    question: '连续打卡有什么用？',
+    answer:
+      '连续打卡可以记录你的学习习惯，帮助你养成每天学习的好习惯。坚持学习可以获得成就徽章，见证自己的成长！',
+  },
+  {
+    question: '如何修改头像和昵称？',
+    answer:
+      '进入"我的"页面，点击"编辑"按钮，就可以修改你的昵称和选择喜欢的头像啦！',
+  },
+]
 
-  function toggleFaq(index: number) {
-    expandedFaq = expandedFaq === index ? null : index
-  }
+function toggleFaq(index: number) {
+  expandedFaq = expandedFaq === index ? null : index
+}
 
-  function goBack() {
-    goto('/settings')
-  }
+function goBack() {
+  goto('/settings')
+}
 </script>
 
 <svelte:head>

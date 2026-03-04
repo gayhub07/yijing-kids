@@ -1,25 +1,29 @@
 <script lang="ts">
-  interface Props {
-    story: {
-      id: number
-      gua: string
-      title: string
-      summary: string
-      read: boolean
-      level?: string
-    }
+interface Props {
+  story: {
+    id: number
+    gua: string
+    title: string
+    summary: string
+    read: boolean
+    level?: string
   }
+}
 
-  let { story }: Props = $props()
+let { story }: Props = $props()
 
-  function getLevelColor(level: string | undefined) {
-    switch (level) {
-      case 'beginner': return '#22C55E'
-      case 'explorer': return '#3B82F6'
-      case 'advanced': return '#8B5CF6'
-      default: return '#F97316'
-    }
+function getLevelColor(level: string | undefined) {
+  switch (level) {
+    case 'beginner':
+      return '#22C55E'
+    case 'explorer':
+      return '#3B82F6'
+    case 'advanced':
+      return '#8B5CF6'
+    default:
+      return '#F97316'
   }
+}
 </script>
 
 <a href="/stories/{story.id}" class="story-card">

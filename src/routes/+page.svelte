@@ -1,106 +1,113 @@
 <script lang="ts">
-  import { onMount } from 'svelte'
-  import { browser } from '$app/environment'
-  import { auth } from '$lib/supabase/auth'
-  import { getProfile, getBaguaProgress, getStoryProgress, getDivinationHistory, checkIn } from '$lib/supabase/api'
-  import FeatureCard from '$lib/components/FeatureCard.svelte'
-  import ProgressRing from '$lib/components/ProgressRing.svelte'
+import { onMount } from 'svelte'
+import { browser } from '$app/environment'
+import {
+  checkIn,
+  getBaguaProgress,
+  getDivinationHistory,
+  getProfile,
+  getStoryProgress,
+} from '$lib/supabase/api'
 
-  let profile = $state<any>(null)
-  let baguaProgress = $state<any[]>([])
-  let storyProgress = $state<any[]>([])
-  let divinationCount = $state(0)
-  let loading = $state(true)
+let profile = $state<any>(null)
+let baguaProgress = $state<any[]>([])
+let storyProgress = $state<any[]>([])
+let divinationCount = $state(0)
+let loading = $state(true)
 
-  const features = [
-    {
-      title: '八卦乐园',
-      description: '认识神奇的八卦符号',
-      icon: '☯️',
-      color: 'from-orange-400 to-rose-500',
-      href: '/bagua'
-    },
-    {
-      title: '故事时光',
-      description: '六十四卦的趣味故事',
-      icon: '📖',
-      color: 'from-blue-400 to-indigo-500',
-      href: '/stories'
-    },
-    {
-      title: '小小占卜师',
-      description: '摇一摇，看看运势',
-      icon: '🔮',
-      color: 'from-purple-400 to-pink-500',
-      href: '/divination'
-    },
-    {
-      title: '成长之路',
-      description: '记录你的进步',
-      icon: '🌟',
-      color: 'from-amber-400 to-orange-500',
-      href: '/profile'
-    }
-  ]
+const features = [
+  {
+    title: '八卦乐园',
+    description: '认识神奇的八卦符号',
+    icon: '☯️',
+    color: 'from-orange-400 to-rose-500',
+    href: '/bagua',
+  },
+  {
+    title: '故事时光',
+    description: '六十四卦的趣味故事',
+    icon: '📖',
+    color: 'from-blue-400 to-indigo-500',
+    href: '/stories',
+  },
+  {
+    title: '小小占卜师',
+    description: '摇一摇，看看运势',
+    icon: '🔮',
+    color: 'from-purple-400 to-pink-500',
+    href: '/divination',
+  },
+  {
+    title: '成长之路',
+    description: '记录你的进步',
+    icon: '🌟',
+    color: 'from-amber-400 to-orange-500',
+    href: '/profile',
+  },
+]
 
-  async function loadData() {
-    if (!browser || !$auth.user) return
+async function loadData() {
+  if (!browser || !$auth.user) return
 
-    loading = true
+  loading = true
 
-    try {
-      const [profileData, baguaData, storyData, divinationData] = await Promise.all([
+  try {
+    const [profileData, baguaData, storyData, divinationData] =
+      await Promise.all([
         getProfile($auth.user.id),
         getBaguaProgress($auth.user.id),
         getStoryProgress($auth.user.id),
-        getDivinationHistory($auth.user.id)
+        getDivinationHistory($auth.user.id),
       ])
 
-      profile = profileData
-      baguaProgress = baguaData
-      storyProgress = storyData
-      divinationCount = divinationData.length
-    } catch (error) {
-      console.error('Error loading data:', error)
-    }
-
-    loading = false
+    profile = profileData
+    baguaProgress = baguaData
+    storyProgress = storyData
+    divinationCount = divinationData.length
+  } catch (error) {
+    console.error('Error loading data:', error)
   }
 
-  async function handleCheckIn() {
-    if (!browser || !$auth.user) return
-    try {
-      const result = await checkIn($auth.user.id)
-      if (result.isNewDay) {
-        await loadData()
-      }
-    } catch (error) {
-      console.error('Check in error:', error)
+  loading = false
+}
+
+async function handleCheckIn() {
+  if (!browser || !$auth.user) return
+  try {
+    const result = await checkIn($auth.user.id)
+    if (result.isNewDay) {
+      await loadData()
     }
+  } catch (error) {
+    console.error('Check in error:', error)
   }
+}
 
-  onMount(() => {
-    if (browser && $auth.user) {
-      loadData()
-    }
-  })
-
-  $effect(() => {
-    if (browser && $auth.user && !profile) {
-      loadData()
-    }
-  })
-
-  const learnedBagua = $derived(baguaProgress.filter(b => b.learned).length)
-  const readStories = $derived(storyProgress.filter(s => s.read).length)
-
-  function getLevelText(level: string) {
-    switch (level) {
-      case 'beginner': return '启蒙期'
-      case 'explorer': return '探索期'
-      default: return '进阶期'
-    }
+onMount(() => {
+  if (browser && $auth.user) {
+    loadData()
   }
+})
+
+$effect(() => {
+  if (browser && $auth.user && !profile) {
+    loadData()
+  }
+})
+
+const learnedBagua = $derived(baguaProgress.filter((b) => b.learned).length)
+const readStories = $derived(storyProgress.filter((s) => s.read).length)
+
+function getLevelText(level: string) {
+  switch (level) {
+    case 'beginner':
+      return '启蒙期'
+    case 'explorer':
+      return '探索期'
+    default:
+      return '进阶期'
+  }
+}
 </script>
 
 <svelte:head>

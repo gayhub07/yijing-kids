@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { goto } from '$app/navigation'
+import { goto } from '$app/navigation'
 
-  function goBack() {
-    goto('/settings')
-  }
+function goBack() {
+  goto('/settings')
+}
 </script>
 
 <svelte:head>

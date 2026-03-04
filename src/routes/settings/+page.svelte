@@ -1,23 +1,23 @@
 <script lang="ts">
-  import { goto } from '$app/navigation'
-  import { browser } from '$app/environment'
-  import { auth } from '$lib/supabase/auth'
+import { browser } from '$app/environment'
+import { goto } from '$app/navigation'
+import { auth } from '$lib/supabase/auth'
 
-  let notifications = $state(true)
-  let soundEnabled = $state(true)
-  let autoPlay = $state(false)
-  let fontSize = $state('medium')
+let notifications = $state(true)
+let soundEnabled = $state(true)
+let autoPlay = $state(false)
+let fontSize = $state('medium')
 
-  function goBack() {
-    goto('/profile')
+function goBack() {
+  goto('/profile')
+}
+
+async function handleLogout() {
+  if (browser && $auth.user) {
+    await auth.signOut()
+    goto('/')
   }
-
-  async function handleLogout() {
-    if (browser && $auth.user) {
-      await auth.signOut()
-      goto('/')
-    }
-  }
+}
 </script>
 
 <svelte:head>

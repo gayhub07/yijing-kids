@@ -1,23 +1,25 @@
 <script lang="ts">
-  interface Props {
-    progress: number
-    color?: string
-    size?: number
-    strokeWidth?: number
-    showLabel?: boolean
-  }
+interface Props {
+  progress: number
+  color?: string
+  size?: number
+  strokeWidth?: number
+  showLabel?: boolean
+}
 
-  let {
-    progress,
-    color = '#F97316',
-    size = 56,
-    strokeWidth = 5,
-    showLabel = true
-  }: Props = $props()
+let {
+  progress,
+  color = '#F97316',
+  size = 56,
+  strokeWidth = 5,
+  showLabel = true,
+}: Props = $props()
 
-  const radius = $derived((size - strokeWidth) / 2)
-  const circumference = $derived(radius * 2 * Math.PI)
-  const offset = $derived(circumference - (Math.min(progress, 100) / 100) * circumference)
+const radius = $derived((size - strokeWidth) / 2)
+const circumference = $derived(radius * 2 * Math.PI)
+const offset = $derived(
+  circumference - (Math.min(progress, 100) / 100) * circumference,
+)
 </script>
 
 <div class="relative flex items-center justify-center flex-shrink-0" style="width: {size}px; height: {size}px;">

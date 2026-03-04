@@ -1,19 +1,18 @@
 <script lang="ts">
-  import '../app.css'
-  import BottomNav from '$lib/components/BottomNav.svelte'
-  import { auth } from '$lib/supabase/auth'
-  import { onMount } from 'svelte'
-  import { browser } from '$app/environment'
+import '../app.css'
+import { onMount } from 'svelte'
+import { browser } from '$app/environment'
+import { auth } from '$lib/supabase/auth'
 
-  let { children } = $props()
-  let mounted = $state(false)
+let { children } = $props()
+let mounted = $state(false)
 
-  onMount(() => {
-    mounted = true
-    if (browser) {
-      auth.initialize()
-    }
-  })
+onMount(() => {
+  mounted = true
+  if (browser) {
+    auth.initialize()
+  }
+})
 </script>
 
 {#if !mounted || $auth.loading}

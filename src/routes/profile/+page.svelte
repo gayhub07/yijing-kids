@@ -1,131 +1,205 @@
 <script lang="ts">
-  import { onMount } from 'svelte'
-  import { goto } from '$app/navigation'
-  import { browser } from '$app/environment'
-  import { auth } from '$lib/supabase/auth'
-  import { getProfile, getBaguaProgress, getStoryProgress, getDivinationHistory, updateProfile } from '$lib/supabase/api'
-  
-  // 成就定义
-  const achievementDefs = [
-    { id: 'first_learn', name: '初入易门', icon: '🌱', desc: '完成第一次学习', condition: (stats: any) => stats.baguaLearned >= 1 },
-    { id: 'bagua_4', name: '八卦新手', icon: '☯️', desc: '学习4个卦象', condition: (stats: any) => stats.baguaLearned >= 4 },
-    { id: 'bagua_8', name: '八卦大师', icon: '🏆', desc: '学习全部8个卦象', condition: (stats: any) => stats.baguaLearned >= 8 },
-    { id: 'story_5', name: '故事爱好者', icon: '📖', desc: '阅读5个故事', condition: (stats: any) => stats.storiesRead >= 5 },
-    { id: 'story_10', name: '故事达人', icon: '📚', desc: '阅读10个故事', condition: (stats: any) => stats.storiesRead >= 10 },
-    { id: 'divine_3', name: '占卜学徒', icon: '🔮', desc: '完成3次占卜', condition: (stats: any) => stats.divinationCount >= 3 },
-    { id: 'divine_5', name: '占卜师', icon: '✨', desc: '完成5次占卜', condition: (stats: any) => stats.divinationCount >= 5 },
-    { id: 'streak_3', name: '坚持者', icon: '🔥', desc: '连续打卡3天', condition: (stats: any) => stats.streakDays >= 3 },
-    { id: 'streak_7', name: '毅力之星', icon: '⭐', desc: '连续打卡7天', condition: (stats: any) => stats.streakDays >= 7 },
-  ]
-  
-  let profile = $state<any>(null)
-  let stats = $state({
-    learningDays: 0,
-    baguaLearned: 0,
-    storiesRead: 0,
-    divinationCount: 0,
-    streakDays: 0
-  })
-  let loading = $state(true)
-  let showEditModal = $state(false)
-  let editName = $state('')
-  let editAvatar = $state('')
-  let isSaving = $state(false)
-  
-  // 头像选项
-  const avatarOptions = ['🦊', '🐼', '🐰', '🐱', '🐶', '🦁', '🐯', '🐻', '🐨', '🐸', '🦉', '🦄']
-  
-  // 计算解锁的成就
-  const achievements = $derived(achievementDefs.map(a => ({
+import { onMount } from 'svelte'
+import { browser } from '$app/environment'
+import {
+  getBaguaProgress,
+  getDivinationHistory,
+  getProfile,
+  getStoryProgress,
+  updateProfile,
+} from '$lib/supabase/api'
+
+// 成就定义
+const achievementDefs = [
+  {
+    id: 'first_learn',
+    name: '初入易门',
+    icon: '🌱',
+    desc: '完成第一次学习',
+    condition: (stats: any) => stats.baguaLearned >= 1,
+  },
+  {
+    id: 'bagua_4',
+    name: '八卦新手',
+    icon: '☯️',
+    desc: '学习4个卦象',
+    condition: (stats: any) => stats.baguaLearned >= 4,
+  },
+  {
+    id: 'bagua_8',
+    name: '八卦大师',
+    icon: '🏆',
+    desc: '学习全部8个卦象',
+    condition: (stats: any) => stats.baguaLearned >= 8,
+  },
+  {
+    id: 'story_5',
+    name: '故事爱好者',
+    icon: '📖',
+    desc: '阅读5个故事',
+    condition: (stats: any) => stats.storiesRead >= 5,
+  },
+  {
+    id: 'story_10',
+    name: '故事达人',
+    icon: '📚',
+    desc: '阅读10个故事',
+    condition: (stats: any) => stats.storiesRead >= 10,
+  },
+  {
+    id: 'divine_3',
+    name: '占卜学徒',
+    icon: '🔮',
+    desc: '完成3次占卜',
+    condition: (stats: any) => stats.divinationCount >= 3,
+  },
+  {
+    id: 'divine_5',
+    name: '占卜师',
+    icon: '✨',
+    desc: '完成5次占卜',
+    condition: (stats: any) => stats.divinationCount >= 5,
+  },
+  {
+    id: 'streak_3',
+    name: '坚持者',
+    icon: '🔥',
+    desc: '连续打卡3天',
+    condition: (stats: any) => stats.streakDays >= 3,
+  },
+  {
+    id: 'streak_7',
+    name: '毅力之星',
+    icon: '⭐',
+    desc: '连续打卡7天',
+    condition: (stats: any) => stats.streakDays >= 7,
+  },
+]
+
+let profile = $state<any>(null)
+let stats = $state({
+  learningDays: 0,
+  baguaLearned: 0,
+  storiesRead: 0,
+  divinationCount: 0,
+  streakDays: 0,
+})
+let loading = $state(true)
+let showEditModal = $state(false)
+let editName = $state('')
+let editAvatar = $state('')
+let isSaving = $state(false)
+
+// 头像选项
+const avatarOptions = [
+  '🦊',
+  '🐼',
+  '🐰',
+  '🐱',
+  '🐶',
+  '🦁',
+  '🐯',
+  '🐻',
+  '🐨',
+  '🐸',
+  '🦉',
+  '🦄',
+]
+
+// 计算解锁的成就
+const achievements = $derived(
+  achievementDefs.map((a) => ({
     ...a,
-    unlocked: a.condition(stats)
-  })))
-  
-  const unlockedCount = $derived(achievements.filter(a => a.unlocked).length)
-  
-  // 加载数据
-  async function loadData() {
-    if (!browser || !$auth.user) return
-    
-    loading = true
-    try {
-      const [profileData, baguaData, storyData, divinationData] = await Promise.all([
+    unlocked: a.condition(stats),
+  })),
+)
+
+const unlockedCount = $derived(achievements.filter((a) => a.unlocked).length)
+
+// 加载数据
+async function loadData() {
+  if (!browser || !$auth.user) return
+
+  loading = true
+  try {
+    const [profileData, baguaData, storyData, divinationData] =
+      await Promise.all([
         getProfile($auth.user.id),
         getBaguaProgress($auth.user.id),
         getStoryProgress($auth.user.id),
-        getDivinationHistory($auth.user.id, 100)
+        getDivinationHistory($auth.user.id, 100),
       ])
-      
-      profile = profileData
-      
-      if (profileData) {
-        editName = profileData.name || ''
-        editAvatar = profileData.avatar || '🦊'
-      }
-      
-      stats = {
-        learningDays: profileData?.streak_days || 0,
-        baguaLearned: baguaData.filter(b => b.learned).length,
-        storiesRead: storyData.filter(s => s.read).length,
-        divinationCount: divinationData.length,
-        streakDays: profileData?.streak_days || 0
-      }
-    } catch (error) {
-      console.error('Error loading profile data:', error)
+
+    profile = profileData
+
+    if (profileData) {
+      editName = profileData.name || ''
+      editAvatar = profileData.avatar || '🦊'
     }
-    loading = false
-  }
-  
-  // 打开编辑弹窗
-  function openEditModal() {
-    showEditModal = true
-  }
-  
-  // 关闭编辑弹窗
-  function closeEditModal() {
-    showEditModal = false
-  }
-  
-  // 选择头像
-  function selectAvatar(avatar: string) {
-    editAvatar = avatar
-  }
-  
-  // 保存编辑
-  async function saveEdit() {
-    if (!browser || !$auth.user || isSaving) return
-    
-    isSaving = true
-    try {
-      await updateProfile($auth.user.id, {
-        name: editName,
-        avatar: editAvatar
-      })
-      
-      profile = {
-        ...profile,
-        name: editName,
-        avatar: editAvatar
-      }
-      
-      closeEditModal()
-    } catch (error) {
-      console.error('Error saving profile:', error)
+
+    stats = {
+      learningDays: profileData?.streak_days || 0,
+      baguaLearned: baguaData.filter((b) => b.learned).length,
+      storiesRead: storyData.filter((s) => s.read).length,
+      divinationCount: divinationData.length,
+      streakDays: profileData?.streak_days || 0,
     }
-    isSaving = false
+  } catch (error) {
+    console.error('Error loading profile data:', error)
   }
-  
-  onMount(() => {
-    if (browser && $auth.user) {
-      loadData()
+  loading = false
+}
+
+// 打开编辑弹窗
+function openEditModal() {
+  showEditModal = true
+}
+
+// 关闭编辑弹窗
+function closeEditModal() {
+  showEditModal = false
+}
+
+// 选择头像
+function selectAvatar(avatar: string) {
+  editAvatar = avatar
+}
+
+// 保存编辑
+async function saveEdit() {
+  if (!browser || !$auth.user || isSaving) return
+
+  isSaving = true
+  try {
+    await updateProfile($auth.user.id, {
+      name: editName,
+      avatar: editAvatar,
+    })
+
+    profile = {
+      ...profile,
+      name: editName,
+      avatar: editAvatar,
     }
-  })
-  
-  $effect(() => {
-    if (browser && $auth.user && loading) {
-      loadData()
-    }
-  })
+
+    closeEditModal()
+  } catch (error) {
+    console.error('Error saving profile:', error)
+  }
+  isSaving = false
+}
+
+onMount(() => {
+  if (browser && $auth.user) {
+    loadData()
+  }
+})
+
+$effect(() => {
+  if (browser && $auth.user && loading) {
+    loadData()
+  }
+})
 </script>
 
 <svelte:head>

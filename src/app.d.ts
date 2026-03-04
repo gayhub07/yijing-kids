@@ -7,8 +7,12 @@ declare global {
       code?: string
     }
     interface Locals {
-      supabase: import('@supabase/supabase-js').SupabaseClient<import('./lib/supabase/database.types').Database>
-      safeGetSession: () => Promise<import('@supabase/supabase-js').Session | null>
+      supabase: import('@supabase/supabase-js').SupabaseClient<
+        import('./lib/supabase/database.types').Database
+      >
+      safeGetSession: () => Promise<
+        import('@supabase/supabase-js').Session | null
+      >
     }
     interface PageData {}
     interface PageState {}
