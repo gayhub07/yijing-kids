@@ -3,6 +3,7 @@ import { onMount } from 'svelte'
 import { browser } from '$app/environment'
 import FeatureCard from '$lib/components/FeatureCard.svelte'
 import ProgressRing from '$lib/components/ProgressRing.svelte'
+import { allStoriesList } from '$lib/data/gua-stories'
 import {
   checkIn,
   getBaguaProgress,
@@ -17,6 +18,9 @@ let baguaProgress = $state<any[]>([])
 let storyProgress = $state<any[]>([])
 let divinationCount = $state(0)
 let loading = $state(true)
+
+// 随机选择一个推荐故事
+const dailyRecommend = $derived(allStoriesList[Math.floor(Math.random() * allStoriesList.length)])
 
 const features = [
   {
@@ -181,11 +185,11 @@ function getLevelText(level: string) {
     <!-- 每日推荐 -->
     <section class="section">
       <h2 class="section-title">今日推荐</h2>
-      <a href="/stories/1" class="recommend-card">
-        <div class="recommend-icon">🌅</div>
+      <a href="/stories/{dailyRecommend.id}" class="recommend-card">
+        <div class="recommend-icon">{dailyRecommend.emoji}</div>
         <div class="recommend-content">
-          <h3>乾卦的故事</h3>
-          <p>天行健，君子以自强不息</p>
+          <h3>{dailyRecommend.title}</h3>
+          <p>{dailyRecommend.gua} ({dailyRecommend.guaPinyin}) · {dailyRecommend.summary}</p>
         </div>
         <span class="recommend-arrow">›</span>
       </a>

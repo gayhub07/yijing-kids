@@ -2,8 +2,10 @@
 interface Props {
   gua: {
     name: string
+    pinyin?: string
     symbol: string
     nature: string
+    naturePinyin?: string
     element: string
     meaning: string
     learned: boolean
@@ -30,8 +32,18 @@ const gradient = $derived(gradients[(index - 1) % 8])
 
 <a href="/bagua/{gua.name}" class="bagua-card" style="background: {gradient}">
   <span class="symbol">{gua.symbol}</span>
-  <h3>{gua.name}</h3>
-  <p class="nature">{gua.nature}</p>
+  <div class="name-row">
+    <h3>{gua.name}</h3>
+    {#if gua.pinyin}
+      <span class="pinyin">({gua.pinyin})</span>
+    {/if}
+  </div>
+  <p class="nature">
+    {gua.nature}
+    {#if gua.naturePinyin}
+      <span class="nature-pinyin">({gua.naturePinyin})</span>
+    {/if}
+  </p>
   
   {#if gua.learned}
     <span class="status learned">✓</span>
@@ -66,17 +78,34 @@ const gradient = $derived(gradients[(index - 1) % 8])
       margin-bottom: 12px;
     }
 
-    h3 {
-      font-size: 26px;
-      font-weight: 700;
-      color: white;
-      margin: 0 0 2px 0;
+    .name-row {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      margin-bottom: 2px;
+
+      h3 {
+        font-size: 26px;
+        font-weight: 700;
+        color: white;
+        margin: 0;
+      }
+
+      .pinyin {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.8);
+      }
     }
 
     .nature {
       font-size: 14px;
       color: rgba(255, 255, 255, 0.9);
       margin: 0;
+
+      .nature-pinyin {
+        font-size: 11px;
+        opacity: 0.8;
+      }
     }
 
     .status {
