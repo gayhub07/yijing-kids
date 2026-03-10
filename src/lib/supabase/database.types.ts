@@ -136,6 +136,29 @@ export interface Database {
           unlocked_at?: string
         }
       }
+      daily_signins: {
+        Row: {
+          id: string
+          user_id: string
+          signin_date: string
+          points: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          signin_date?: string
+          points?: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          signin_date?: string
+          points?: number
+          created_at?: string
+        }
+      }
     }
     Views: {
       [_ in never]: never

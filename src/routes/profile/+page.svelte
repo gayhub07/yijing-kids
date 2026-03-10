@@ -6,6 +6,7 @@ import {
   getDivinationHistory,
   getProfile,
   getStoryProgress,
+  getTotalPoints,
   updateProfile,
 } from '$lib/supabase/api'
 import { auth } from '$lib/supabase/auth'
@@ -84,6 +85,7 @@ let stats = $state({
   storiesRead: 0,
   divinationCount: 0,
   streakDays: 0,
+  totalPoints: 0,
 })
 let loading = $state(true)
 let showEditModal = $state(false)
@@ -123,12 +125,13 @@ async function loadData() {
 
   loading = true
   try {
-    const [profileData, baguaData, storyData, divinationData] =
+    const [profileData, baguaData, storyData, divinationData, pointsData] =
       await Promise.all([
         getProfile($auth.user.id),
         getBaguaProgress($auth.user.id),
         getStoryProgress($auth.user.id),
         getDivinationHistory($auth.user.id, 100),
+        getTotalPoints($auth.user.id),
       ])
 
     profile = profileData
@@ -144,6 +147,7 @@ async function loadData() {
       storiesRead: storyData.filter((s) => s.read).length,
       divinationCount: divinationData.length,
       streakDays: profileData?.streak_days || 0,
+      totalPoints: pointsData,
     }
   } catch (error) {
     console.error('Error loading profile data:', error)
@@ -241,6 +245,11 @@ $effect(() => {
           <span class="stat-label">连续打卡</span>
         </div>
         <div class="stat-card">
+          <span class="stat-icon">⭐</span>
+          <span class="stat-value">{stats.totalPoints}</span>
+          <span class="stat-label">总积分</span>
+        </div>
+        <div class="stat-card">
           <span class="stat-icon">☯️</span>
           <span class="stat-value">{stats.baguaLearned}/8</span>
           <span class="stat-label">已学卦象</span>
@@ -249,11 +258,6 @@ $effect(() => {
           <span class="stat-icon">📖</span>
           <span class="stat-value">{stats.storiesRead}</span>
           <span class="stat-label">已读故事</span>
-        </div>
-        <div class="stat-card">
-          <span class="stat-icon">🔮</span>
-          <span class="stat-value">{stats.divinationCount}</span>
-          <span class="stat-label">占卜次数</span>
         </div>
       </div>
     </section>
@@ -274,8 +278,13 @@ $effect(() => {
       </div>
     </section>
     
-    <!-- 设置选项 -->
+    <!-- 快捷入口 -->
     <section class="settings-section">
+      <a href="/signin" class="setting-item highlight">
+        <span class="setting-icon">📅</span>
+        <span>每日签到</span>
+        <span class="arrow">→</span>
+      </a>
       <a href="/settings" class="setting-item">
         <span class="setting-icon">⚙️</span>
         <span>设置</span>
@@ -397,10 +406,15 @@ $effect(() => {
       border-radius: 8px;
       font-size: 14px;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: all 0.12s;
+      -webkit-tap-highlight-color: transparent;
 
       &:hover {
         background: rgba(255, 255, 255, 0.3);
+      }
+
+      &:active {
+        transform: scale(0.95);
       }
     }
   }
@@ -478,7 +492,8 @@ $effect(() => {
     border-radius: 12px;
     padding: 12px;
     text-align: center;
-    transition: transform 0.2s;
+    transition: transform 0.12s;
+    -webkit-tap-highlight-color: transparent;
 
     &.unlocked {
       background: linear-gradient(135deg, #FFF7ED, #FFEDD5);
@@ -486,6 +501,10 @@ $effect(() => {
 
     &.locked {
       opacity: 0.5;
+    }
+
+    &:active {
+      transform: scale(0.95);
     }
 
     .achievement-icon {
@@ -508,9 +527,31 @@ $effect(() => {
     border-bottom: 1px solid #F2F2F7;
     text-decoration: none;
     color: #1C1C1E;
+    transition: background 0.12s;
+    -webkit-tap-highlight-color: transparent;
 
     &:last-child {
       border-bottom: none;
+    }
+
+    &:active {
+      background: #F2F2F7;
+    }
+
+    &.highlight {
+      background: linear-gradient(135deg, #FFF7ED, #FFEDD5);
+      margin: 0 -16px 16px -16px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border-bottom: none;
+
+      &:active {
+        background: linear-gradient(135deg, #FFEDD5, #FFE4CC);
+      }
+
+      .setting-icon {
+        font-size: 24px;
+      }
     }
 
     .setting-icon {
@@ -603,7 +644,8 @@ $effect(() => {
     background: white;
     font-size: 24px;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.12s;
+    -webkit-tap-highlight-color: transparent;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -611,6 +653,10 @@ $effect(() => {
     &.selected {
       border-color: #FF9500;
       background: #FFF7ED;
+    }
+
+    &:active {
+      transform: scale(0.9);
     }
   }
 
@@ -627,7 +673,8 @@ $effect(() => {
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.12s;
+    -webkit-tap-highlight-color: transparent;
 
     &:disabled {
       opacity: 0.6;
@@ -637,11 +684,19 @@ $effect(() => {
     &.btn-cancel {
       background: #F2F2F7;
       color: #8E8E93;
+
+      &:active:not(:disabled) {
+        transform: scale(0.96) translateY(2px);
+      }
     }
 
     &.btn-save {
       background: linear-gradient(135deg, #FF9500, #FF2D55);
       color: white;
+
+      &:active:not(:disabled) {
+        transform: scale(0.96) translateY(2px);
+      }
     }
   }
 </style>
