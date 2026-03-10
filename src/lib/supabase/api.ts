@@ -174,6 +174,19 @@ export async function getDivinationHistory(
   return data || []
 }
 
+// 获取 Asia/Shanghai 时区的日期字符串
+function getTodayDateString(): string {
+  const now = new Date()
+  return now
+    .toLocaleDateString('zh-CN', {
+      timeZone: 'Asia/Shanghai',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    })
+    .replace(/\//g, '-')
+}
+
 // 打卡（旧版，保留兼容）
 export async function checkIn(
   userId: string,
@@ -181,7 +194,7 @@ export async function checkIn(
   const profile = await getProfile(userId)
   if (!profile) throw new Error('Profile not found')
 
-  const today = new Date().toISOString().split('T')[0]
+  const today = getTodayDateString()
   const lastCheckIn = profile.last_check_in
 
   if (lastCheckIn === today) {
@@ -190,7 +203,14 @@ export async function checkIn(
 
   const yesterday = new Date()
   yesterday.setDate(yesterday.getDate() - 1)
-  const yesterdayStr = yesterday.toISOString().split('T')[0]
+  const yesterdayStr = yesterday
+    .toLocaleDateString('zh-CN', {
+      timeZone: 'Asia/Shanghai',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    })
+    .replace(/\//g, '-')
 
   const isContinuous = lastCheckIn === yesterdayStr
   const newStreak = isContinuous ? profile.streak_days + 1 : 1
@@ -212,7 +232,7 @@ export async function dailySignin(userId: string): Promise<{
   signin?: DailySignin
 }> {
   const supabase = getSupabaseClient()
-  const today = new Date().toISOString().split('T')[0]
+  const today = getTodayDateString()
 
   // 检查今天是否已签到
   const { data: existingSignin } = await supabase
@@ -239,7 +259,14 @@ export async function dailySignin(userId: string): Promise<{
 
   const yesterday = new Date()
   yesterday.setDate(yesterday.getDate() - 1)
-  const yesterdayStr = yesterday.toISOString().split('T')[0]
+  const yesterdayStr = yesterday
+    .toLocaleDateString('zh-CN', {
+      timeZone: 'Asia/Shanghai',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    })
+    .replace(/\//g, '-')
 
   const isContinuous = profile.last_check_in === yesterdayStr
   const newStreak = isContinuous ? profile.streak_days + 1 : 1

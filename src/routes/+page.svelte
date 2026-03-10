@@ -266,11 +266,12 @@ function getLevelText(level: string) {
     cursor: pointer;
     color: white;
     box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3);
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+    -webkit-tap-highlight-color: transparent;
 
     &:active {
-      transform: scale(0.95);
-      box-shadow: 0 1px 4px rgba(249, 115, 22, 0.3);
+      transform: scale(0.92) translateY(2px);
+      box-shadow: 0 1px 3px rgba(249, 115, 22, 0.25);
     }
 
     .streak-icon {
@@ -353,11 +354,12 @@ function getLevelText(level: string) {
     border-radius: 16px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     text-decoration: none;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+    -webkit-tap-highlight-color: transparent;
 
     &:active {
-      transform: scale(0.98);
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+      transform: scale(0.96) translateY(2px);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
     }
 
     .recommend-icon {

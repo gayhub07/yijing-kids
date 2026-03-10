@@ -34,13 +34,14 @@ let { feature }: Props = $props()
     text-decoration: none;
     background: white;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
     position: relative;
     overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
 
     &:active {
-      transform: scale(0.98);
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+      transform: scale(0.96) translateY(2px);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     }
 
     .icon {

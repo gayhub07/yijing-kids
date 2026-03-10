@@ -10,6 +10,9 @@ import {
   updateProfile,
 } from '$lib/supabase/api'
 import { auth } from '$lib/supabase/auth'
+import type { Database } from '$lib/supabase/database.types'
+
+type Profile = Database['public']['Tables']['profiles']['Row']
 
 // 成就定义
 const achievementDefs = [
@@ -78,7 +81,7 @@ const achievementDefs = [
   },
 ]
 
-let profile = $state<any>(null)
+let profile = $state<Profile | null>(null)
 let stats = $state({
   learningDays: 0,
   baguaLearned: 0,
@@ -196,12 +199,6 @@ async function saveEdit() {
 
 onMount(() => {
   if (browser && $auth.user) {
-    loadData()
-  }
-})
-
-$effect(() => {
-  if (browser && $auth.user && loading) {
     loadData()
   }
 })

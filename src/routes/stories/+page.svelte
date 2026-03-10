@@ -214,8 +214,9 @@ function getLevelColor(level: string) {
     font-size: 13px;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.12s ease;
     flex-shrink: 0;
+    -webkit-tap-highlight-color: transparent;
 
     .tab-icon {
       font-size: 14px;
@@ -227,7 +228,7 @@ function getLevelColor(level: string) {
     }
 
     &:active {
-      transform: scale(0.96);
+      transform: scale(0.94) translateY(2px);
     }
   }
 
@@ -273,10 +274,11 @@ function getLevelColor(level: string) {
     border-radius: 14px;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
     text-decoration: none;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+    -webkit-tap-highlight-color: transparent;
 
     &:active {
-      transform: scale(0.98);
+      transform: scale(0.97) translateY(2px);
       box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     }
 

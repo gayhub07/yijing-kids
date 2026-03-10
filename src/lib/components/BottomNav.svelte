@@ -73,8 +73,9 @@ const currentPath = $derived(page.url.pathname)
     padding: 6px 12px;
     color: #8E8E93;
     text-decoration: none;
-    transition: color 0.2s ease;
+    transition: color 0.2s ease, transform 0.12s ease;
     gap: 4px;
+    -webkit-tap-highlight-color: transparent;
 
     svg {
       width: 24px;
@@ -85,6 +86,10 @@ const currentPath = $derived(page.url.pathname)
     span {
       font-size: 11px;
       font-weight: 500;
+    }
+
+    &:active {
+      transform: scale(0.9);
     }
 
     &.active {

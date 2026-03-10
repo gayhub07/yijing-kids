@@ -147,9 +147,12 @@ async function handleLogout() {
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: all 0.12s;
+      -webkit-tap-highlight-color: transparent;
 
       &:active {
         background: #E5E5EA;
+        transform: scale(0.95);
       }
     }
 
@@ -197,10 +200,12 @@ async function handleLogout() {
       text-decoration: none;
       color: inherit;
       cursor: pointer;
-      transition: background 0.15s ease;
+      transition: all 0.12s;
+      -webkit-tap-highlight-color: transparent;
 
       &:active {
         background: #F2F2F7;
+        transform: scale(0.98) translateX(-2px);
       }
     }
 

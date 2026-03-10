@@ -52,13 +52,26 @@ function getWeekday(dateStr: string): string {
   return `周${weekdays[date.getDay()]}`
 }
 
+// 获取 Asia/Shanghai 时区的日期字符串
+function getTodayDateString(): string {
+  const now = new Date()
+  return now
+    .toLocaleDateString('zh-CN', {
+      timeZone: 'Asia/Shanghai',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    })
+    .replace(/\//g, '-')
+}
+
 // 加载数据
 async function loadData() {
   if (!browser || !$auth.user) return
 
   loading = true
   try {
-    const today = new Date().toISOString().split('T')[0]
+    const today = getTodayDateString()
     const [history, streakData, pointsData] = await Promise.all([
       getSigninHistory($auth.user.id, 30),
       getSigninStreak($auth.user.id),
@@ -109,12 +122,6 @@ async function handleSignin() {
 
 onMount(() => {
   if (browser && $auth.user) {
-    loadData()
-  }
-})
-
-$effect(() => {
-  if (browser && $auth.user && loading) {
     loadData()
   }
 })
@@ -218,7 +225,7 @@ $effect(() => {
       {#if signinHistory.length === 0}
         <div class="empty-history">
           <span class="empty-icon">📝</span>
-          <p>还没有签到记录</span>
+          <p>还没有签到记录</p>
           <p class="empty-hint">快来签到吧！</p>
         </div>
       {:else}

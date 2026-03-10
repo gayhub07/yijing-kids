@@ -263,7 +263,8 @@ $effect(() => {
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: all 0.12s;
+    -webkit-tap-highlight-color: transparent;
 
     &:disabled {
       opacity: 0.4;
@@ -277,16 +278,28 @@ $effect(() => {
       &:hover:not(:disabled) {
         background: #EA580C;
       }
+
+      &:active:not(:disabled) {
+        transform: scale(0.96) translateY(2px);
+      }
     }
 
     &.btn-secondary {
       background: #F2F2F7;
       color: #8E8E93;
+
+      &:active:not(:disabled) {
+        transform: scale(0.96) translateY(2px);
+      }
     }
 
     &.btn-success {
       background: #22C55E;
       color: white;
+
+      &:active:not(:disabled) {
+        transform: scale(0.96) translateY(2px);
+      }
     }
   }
 
@@ -312,10 +325,12 @@ $effect(() => {
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: background 0.15s ease;
+      transition: all 0.12s;
+      -webkit-tap-highlight-color: transparent;
 
       &:active {
         background: #E5E5EA;
+        transform: scale(0.95);
       }
     }
 
@@ -509,10 +524,17 @@ $effect(() => {
       color: #1C1C1E;
       cursor: pointer;
       box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+      transition: all 0.12s;
+      -webkit-tap-highlight-color: transparent;
 
       .toggle-icon {
         font-size: 12px;
         color: #8E8E93;
+      }
+
+      &:active {
+        background: #F2F2F7;
+        transform: scale(0.98);
       }
     }
 

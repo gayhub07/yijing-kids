@@ -232,6 +232,13 @@ $effect(() => {
         display: flex;
         align-items: center;
         justify-content: center;
+        transition: all 0.12s;
+        -webkit-tap-highlight-color: transparent;
+
+        &:active {
+          background: #E5E5EA;
+          transform: scale(0.95);
+        }
       }
 
       h1 {
@@ -365,10 +372,15 @@ $effect(() => {
           padding: 16px 20px;
           border-radius: 16px;
           text-decoration: none;
-          transition: transform 0.2s;
+          transition: all 0.12s;
+          -webkit-tap-highlight-color: transparent;
 
           &:hover {
             transform: translateY(-2px);
+          }
+
+          &:active {
+            transform: scale(0.96) translateY(2px);
           }
 
           .other-symbol {
@@ -404,7 +416,8 @@ $effect(() => {
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: all 0.12s;
+    -webkit-tap-highlight-color: transparent;
 
     &:disabled {
       opacity: 0.6;
@@ -419,11 +432,20 @@ $effect(() => {
         transform: translateY(-2px);
         box-shadow: 0 8px 24px rgba(255, 149, 0, 0.4);
       }
+
+      &:active:not(:disabled) {
+        transform: scale(0.96) translateY(2px);
+        box-shadow: 0 4px 12px rgba(255, 149, 0, 0.3);
+      }
     }
 
     &.btn-success {
       background: linear-gradient(135deg, #34C759, #30D158);
       color: white;
+
+      &:active:not(:disabled) {
+        transform: scale(0.96) translateY(2px);
+      }
     }
   }
 

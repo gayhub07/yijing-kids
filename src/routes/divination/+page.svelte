@@ -328,11 +328,17 @@ $effect(() => {
     font-size: 18px;
     font-weight: 600;
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.12s, box-shadow 0.12s;
+    -webkit-tap-highlight-color: transparent;
 
     &:hover:not(:disabled) {
       transform: translateY(-2px);
       box-shadow: 0 8px 24px rgba(255, 149, 0, 0.4);
+    }
+
+    &:active:not(:disabled) {
+      transform: scale(0.94) translateY(2px);
+      box-shadow: 0 4px 12px rgba(255, 149, 0, 0.3);
     }
 
     &:disabled {
@@ -407,7 +413,8 @@ $effect(() => {
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.12s;
+    -webkit-tap-highlight-color: transparent;
 
     &.btn-secondary {
       background: #F2F2F7;
@@ -415,6 +422,10 @@ $effect(() => {
 
       &:hover {
         background: #E5E5EA;
+      }
+
+      &:active {
+        transform: scale(0.96) translateY(2px);
       }
     }
   }

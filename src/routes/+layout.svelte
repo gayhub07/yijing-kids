@@ -2,16 +2,25 @@
 import '../app.css'
 import { onMount } from 'svelte'
 import { browser } from '$app/environment'
+import { page } from '$app/stores'
 import { auth } from '$lib/supabase/auth'
 import BottomNav from '$lib/components/BottomNav.svelte'
 
 let { children } = $props()
 let mounted = $state(false)
+let currentPage = $state('')
 
 onMount(() => {
   mounted = true
   if (browser) {
     auth.initialize()
+    currentPage = page.url.pathname
+  }
+})
+
+$effect(() => {
+  if (browser) {
+    currentPage = page.url.pathname
   }
 })
 </script>
@@ -33,7 +42,9 @@ onMount(() => {
 {:else}
   <div class="app-container">
     <main class="main-content">
-      {@render children()}
+      <div key={currentPage} class="page-transition">
+        {@render children()}
+      </div>
     </main>
     <BottomNav />
   </div>
@@ -109,5 +120,21 @@ onMount(() => {
     /* 底部留出足够空间给导航栏 */
     padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
     overflow-y: auto;
+  }
+
+  .page-transition {
+    animation: pageEnter 0.2s ease-out;
+    height: 100%;
+  }
+
+  @keyframes pageEnter {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 </style>
